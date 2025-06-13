@@ -118,13 +118,26 @@ const SimpleJsonManager = () => {
   const handleEditFile = (file) => {
     setSelectedFile(file);
     setFileName(file.name);
-    setJsonContent(JSON.stringify(file.content, null, 2));
+    setJsonContent(JSON.stringify(file.channels ? {channels: file.channels} : file.content, null, 2));
     setIsEditing(true);
   };
 
-  const handleDeleteFile = (fileId) => {
-    setJsonFiles(prev => prev.filter(file => file.id !== fileId));
-    showNotification('تم حذف الملف بنجاح');
+  const handleDeleteFile = async (fileId) => {
+    try {
+      const response = await fetch(`${API}/json-configs/${fileId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        setJsonFiles(prev => prev.filter(file => file.id !== fileId));
+        showNotification('تم حذف الملف بنجاح');
+      } else {
+        throw new Error('Failed to delete configuration');
+      }
+    } catch (error) {
+      console.error('Error deleting configuration:', error);
+      showNotification('خطأ في حذف الملف');
+    }
   };
 
   const handleCopyId = (fileId) => {
