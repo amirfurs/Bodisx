@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
-import JsonManager from "./components/JsonManager";
-import { Toaster } from "./components/ui/toaster";
+import SimpleJsonManager from "./components/SimpleJsonManager";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -22,7 +21,7 @@ const Home = () => {
     helloWorldApi();
   }, []);
 
-  return <JsonManager />;
+  return <SimpleJsonManager />;
 };
 
 function App() {
@@ -35,7 +34,6 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      <Toaster />
     </div>
   );
 }
