@@ -30,8 +30,9 @@ DISCORD_APPLICATION_ID = os.getenv('DISCORD_APPLICATION_ID')
 # Create Discord bot instance
 intents = discord.Intents.default()
 intents.guilds = True
-intents.guild_messages = True
-intents.message_content = True
+# Remove privileged intents for now
+# intents.guild_messages = True
+# intents.message_content = True
 
 class DiscordBot(commands.Bot):
     def __init__(self):
