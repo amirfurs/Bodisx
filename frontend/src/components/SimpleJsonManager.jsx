@@ -62,7 +62,7 @@ const SimpleJsonManager = () => {
     }
   };
 
-  const handleSaveJson = () => {
+  const handleSaveJson = async () => {
     if (!fileName.trim()) {
       showNotification('اسم مطلوب - يرجى إدخال اسم للملف');
       return;
@@ -70,24 +70,38 @@ const SimpleJsonManager = () => {
 
     try {
       const parsedJson = JSON.parse(jsonContent);
-      const newJsonFile = {
-        id: `json_${Date.now()}`,
+      
+      const configData = {
         name: fileName,
-        content: parsedJson,
-        createdAt: new Date().toISOString(),
-        channelCount: parsedJson.channels ? parsedJson.channels.length : 0,
+        description: `تكوين Discord لـ ${fileName}`,
+        channels: parsedJson.channels || []
       };
 
-      if (selectedFile) {
-        // Update existing file
-        setJsonFiles(prev => prev.map(file => 
-          file.id === selectedFile.id ? newJsonFile : file
-        ));
-        showNotification(`تم تحديث ${fileName} بنجاح`);
+      // Save to backend
+      const response = await fetch(`${API}/json-configs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(configData)
+      });
+
+      if (response.ok) {
+        const newConfig = await response.json();
+        
+        if (selectedFile) {
+          // Update existing file in state
+          setJsonFiles(prev => prev.map(file => 
+            file.id === selectedFile.id ? newConfig : file
+          ));
+          showNotification(`تم تحديث ${fileName} بنجاح`);
+        } else {
+          // Add new file to state
+          setJsonFiles(prev => [...prev, newConfig]);
+          showNotification(`تم حفظ ${fileName} بنجاح`);
+        }
       } else {
-        // Add new file
-        setJsonFiles(prev => [...prev, newJsonFile]);
-        showNotification(`تم حفظ ${fileName} بنجاح`);
+        throw new Error('Failed to save configuration');
       }
 
       // Reset form
@@ -96,7 +110,8 @@ const SimpleJsonManager = () => {
       setSelectedFile(null);
       setIsEditing(false);
     } catch (error) {
-      showNotification('خطأ في JSON - تأكد من صحة تنسيق JSON');
+      console.error('Error saving configuration:', error);
+      showNotification('خطأ في حفظ الملف - تأكد من صحة تنسيق JSON');
     }
   };
 
