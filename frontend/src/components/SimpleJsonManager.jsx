@@ -10,10 +10,30 @@ const SimpleJsonManager = () => {
   const [showPreview, setShowPreview] = useState({});
   const [notification, setNotification] = useState('');
 
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const API = `${BACKEND_URL}/api`;
+
   useEffect(() => {
-    // Load mock data on component mount
-    setJsonFiles(mockData.savedJsonFiles);
+    // Load configurations from backend
+    loadConfigurations();
   }, []);
+
+  const loadConfigurations = async () => {
+    try {
+      const response = await fetch(`${API}/json-configs`);
+      if (response.ok) {
+        const configs = await response.json();
+        setJsonFiles(configs);
+      } else {
+        // Fallback to mock data if backend fails
+        setJsonFiles(mockData.savedJsonFiles);
+      }
+    } catch (error) {
+      console.error('Error loading configurations:', error);
+      // Fallback to mock data
+      setJsonFiles(mockData.savedJsonFiles);
+    }
+  };
 
   const showNotification = (message) => {
     setNotification(message);
