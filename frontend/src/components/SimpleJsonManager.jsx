@@ -470,10 +470,10 @@ const SimpleJsonManager = () => {
                     <div style={styles.fileName}>{file.name}</div>
                     <div style={styles.fileInfo}>
                       <span style={{ backgroundColor: '#e74c3c', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '12px' }}>
-                        {file.channelCount} قناة
+                        {file.channel_count || file.channelCount || 0} قناة
                       </span>
                       <span style={{ margin: '0 8px' }}>•</span>
-                      <span>{new Date(file.createdAt).toLocaleDateString('ar-SA')}</span>
+                      <span>{new Date(file.created_at || file.createdAt).toLocaleDateString('ar-SA')}</span>
                     </div>
                     <div style={styles.fileId}>
                       المعرف: {file.id}
@@ -482,7 +482,7 @@ const SimpleJsonManager = () => {
                     {/* Preview */}
                     {showPreview[file.id] && (
                       <div style={styles.preview}>
-                        <pre>{JSON.stringify(file.content, null, 2)}</pre>
+                        <pre>{JSON.stringify(file.channels || file.content, null, 2)}</pre>
                       </div>
                     )}
 
