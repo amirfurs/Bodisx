@@ -382,14 +382,22 @@ async def startup_event():
                 except Exception as e:
                     await interaction.followup.send(f"❌ Error: {str(e)}")
             
-            # Start bot in background
-            asyncio.create_task(discord_bot.start(DISCORD_BOT_TOKEN))
+            # Start bot in background task
+            loop = asyncio.get_event_loop()
+            loop.create_task(start_discord_bot())
             logger.info("Discord bot initialization started")
             
         except Exception as e:
             logger.error(f"Failed to initialize Discord bot: {e}")
     else:
         logger.warning("Discord bot token not provided, bot functionality disabled")
+
+async def start_discord_bot():
+    """Start Discord bot in a separate task"""
+    try:
+        await discord_bot.start(DISCORD_BOT_TOKEN)
+    except Exception as e:
+        logger.error(f"Discord bot error: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_event():
