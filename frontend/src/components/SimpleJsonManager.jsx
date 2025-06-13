@@ -160,7 +160,7 @@ const SimpleJsonManager = () => {
   };
 
   const handleDownloadJson = (file) => {
-    const dataStr = JSON.stringify(file.content, null, 2);
+    const dataStr = JSON.stringify(file.channels ? {channels: file.channels} : file.content, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
     
     const exportFileDefaultName = `${file.name}.json`;
