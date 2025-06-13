@@ -1,13 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
-import { Badge } from './ui/badge';
-import { Separator } from './ui/separator';
-import { useToast } from '../hooks/use-toast';
-import { Upload, FileText, Trash2, Copy, Eye, EyeOff, Download } from 'lucide-react';
 import mockData from '../mock/jsonTemplates';
 
 const JsonManager = () => {
